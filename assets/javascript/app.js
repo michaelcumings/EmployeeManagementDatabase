@@ -1,6 +1,11 @@
-
-
-
+var config = {
+  apiKey: "AIzaSyBD8BWnPeg6pFNFFO8rxZ3SFJVdNxWVzSM",
+  authDomain: "fir-demo-03-day.firebaseapp.com",
+  databaseURL: "https://fir-demo-03-day.firebaseio.com",
+  projectId: "fir-demo-03-day",
+  storageBucket: "fir-demo-03-day.appspot.com",
+  messagingSenderId: "528774204732"
+};
 
 firebase.initializeApp(config);
 
@@ -27,7 +32,7 @@ $("#add-employee").on("click", function(event) {
   database.ref().push({
     name: name,
     role: role,
-    startDate: startdate,
+    startDate: startDate,
     monthlyRate: monthlyRate,
     dateAdded: firebase.database.ServerValue.TIMESTAMP
   });
@@ -45,13 +50,34 @@ database.ref().on("child_added", function(snapshot) {
   console.log(sv.startDate);
   console.log(sv.monthlyRate);
 
-  // Change the HTML to reflect
-  $("#name-display").text(sv.name);
-  $("#role-display").text(sv.role);
-  $("#startDate-display").text(sv.startDate);
-  $("#monthlyRate-display").text(sv.monthlyRate);
+  dataRef.ref().on("child_added", function(childSnapshot) {
+      
+    // Log everything that's coming out of snapshot
+    console.log(childSnapshot.val().name);
+    console.log(childSnapshot.val().role);
+    console.log(childSnapshot.val().startDate);
+    console.log(childSnapshot.val().monthlyRate);
+    
+    // full list of items to the well
+    $("#full-member-list").append("<div class='well'><span class='member-name'> " + childSnapshot.val().name +
+      " </span><span class='member-role'> " + childSnapshot.val().role +
+        " </span><span class='member-startDate'> " + childSnapshot.val().startDate +
+          " </span><span class='member-monthlyRate'> " + childSnapshot.val().monthlyRate + " </span></div>");
+          
+    // Handle the errors
+  }, function(errorObject) {
+    console.log("Errors handled: " + errorObject.code);
+  });
+      
+  dataRef.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot) {
+    // Change the HTML to reflect
+    $("#name-display").text(snapshot.val().name);
+    $("#role-display").text(snapshot.val().role);
+    $("#age-display").text(snapshot.val().startDate);
+    $("#comment-display").text(snapshot.val().comment);
+  });
 
-  // Handle the errors
+
 }, function(errorObject) {
   console.log("Errors handled: " + errorObject.code);
 });
