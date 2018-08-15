@@ -43,7 +43,6 @@ $("#add-employee").on("click", function(event) {
 database.ref().on("child_added", function(snapshot) {
   // storing the snapshot.val() in a variable for convenience
   var sv = snapshot.val();
-
   // Console.loging the last user's data
   console.log(sv.name);
   console.log(sv.role);
@@ -73,8 +72,8 @@ database.ref().on("child_added", function(snapshot) {
     // Change the HTML to reflect
     $("#name-display").text(snapshot.val().name);
     $("#role-display").text(snapshot.val().role);
-    $("#age-display").text(snapshot.val().startDate);
-    $("#comment-display").text(snapshot.val().comment);
+    $("#startDate-display").text(snapshot.val().startDate);
+    $("#monthlyRate-display").text(snapshot.val().monthlyRate);
   });
 
 
